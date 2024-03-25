@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+float mostraObtemPesoIdeal(float altura) {
+    float a2 = altura*altura;
+    printf("Seu peso ideal deveria estar entre %.2f e %.2f\n", 18.5*a2, 24.99*a2);
+    return (24.99+18.5)/2*a2; // Peso estritamente ideal
+}
+
+float obtemFatorAtividade() {
+    int opcao;
+    float fator;
+    printf("Sedendatario? Digite 1\n");
+    printf("Triatleta? Digite 10\n");
+    printf("\n\n\nOpcao: ");
+    scanf("%d", &opcao);
+    switch(opcao) {
+        case 1: fator = 1.2; break;
+        case 10: fator = 3; break;
+        default: printf("Opcao invalida\n"); // Isto pode retornar lixo. Cuidado!!!
+    }
+    return fator;
+}
+
+float obtemCaloriasIdeais(float fAtiv, char sexo, float altura, float peso, int idade) {
+    float calorias;
+    if(sexo=='m' || sexo=='M')
+        calorias = fAtiv * (66 + 13.7 * peso + 5*altura - 6.8*idade);
+    else
+        calorias = fAtiv * (655 + 9.6*peso + 1.8*altura - 4.7*idade);
+    return calorias;
+}
+
+int main() {
+    float altura, peso, imc, fator_Ativ, pesoIdeal;
+    char sexo;
+    int idade;
+    printf("Qual seu sexo? ");
+    scanf("%c", &sexo);
+    printf("Qual sua idade? ");
+    scanf("%d", &idade);
+    printf("Qual sua altura (m)? ");
+    scanf("%f", &altura);
+    printf("Qual seu peso? ");
+    scanf("%f", &peso);
+    imc = peso / (altura*altura);
+    if(imc>=25 || imc<18.5) { // Nao esta bem
+        // Calcula e informa faixa de peso ideal
+        pesoIdeal = mostraObtemPesoIdeal(altura);
+        // Obter fator de atividade
+        if(imc>=25) // Acima do peso ideal
+            printf("Ola. Voce se encontra acima de seu peso ideal.\n");
+        else // Abaixo do peso ideal
+            printf("Ola. Voce se encontra abaixo de seu peso ideal.\n");
+        fator_Ativ = obtemFatorAtividade();
+        printf("E portanto, voce precisa regular suas calorias diarias\n");
+        printf("para %f calorias\n", obtemCaloriasIdeais(fator_Ativ, sexo, altura*100, pesoIdeal, idade));
+    }
+    else // Esta bem
+        printf("Voce esta em seu peso ideal. Parabens!!!\n");
+    return 0;
+}
